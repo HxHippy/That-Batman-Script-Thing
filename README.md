@@ -4,7 +4,9 @@ A comic book adaptation of the infamous AI-generated Batman screenplay that went
 
 You know the one. "Alltimes orphan." "Eat a dinner, Mattress Wayne." "I drink bats just like a bat would!"
 
-**[Read the comic](https://hxhippy.github.io/That-Batman-Script-Thing/)** | [or open locally](index.html)
+**[Read the comic](https://hxhippy.github.io/That-Batman-Script-Thing/)**
+
+![Social Preview](social-preview.jpg)
 
 ## What Is This?
 
@@ -54,9 +56,9 @@ credit or have concerns, please open an issue.
 ```bash
 git clone https://github.com/HxHippy/That-Batman-Script-Thing.git
 cd That-Batman-Script-Thing
-# Open comic.html in your browser
-open comic.html      # macOS
-xdg-open comic.html  # Linux
+open index.html       # macOS
+xdg-open index.html   # Linux
+start index.html      # Windows
 ```
 
 No build step, no dependencies. It's a single HTML file with images. Just like Batman would want it.
