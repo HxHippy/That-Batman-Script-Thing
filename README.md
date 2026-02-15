@@ -4,7 +4,7 @@ A comic book adaptation of the infamous AI-generated Batman screenplay that went
 
 You know the one. "Alltimes orphan." "Eat a dinner, Mattress Wayne." "I drink bats just like a bat would!"
 
-**[Read the comic](https://hxhippy.github.io/That-Batman-Script-Thing/)** | [or open locally](comic.html)
+**[Read the comic](https://hxhippy.github.io/That-Batman-Script-Thing/)** | [or open locally](index.html)
 
 ## What Is This?
 
