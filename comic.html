@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BATMAN - An AI Script, Illustrated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page-width: 800px;
+    --gutter: 6px;
+    --panel-border: 3px solid #000;
+    --bubble-bg: #fff;
+    --bubble-border: 2px solid #000;
+    --narration-bg: #f5e6a0;
+    --narration-border: 2px solid #8b7d3c;
+    --page-bg: #1a1a2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--page-bg);
+    font-family: 'Patrick Hand', cursive;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 40px;
+  }
+
+  /* Cover */
+  .cover {
+    width: var(--page-width);
+    background: #0a0a1a;
+    border: 4px solid #333;
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border: 2px solid #444;
+  }
+  .cover h1 {
+    font-family: 'Bangers', cursive;
+    font-size: 72px;
+    color: #ffd700;
+    text-shadow: 4px 4px 0 #000, -1px -1px 0 #000;
+    letter-spacing: 8px;
+    margin-bottom: 10px;
+  }
+  .cover .subtitle {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 22px;
+    color: #aaa;
+    font-style: italic;
+    margin-bottom: 30px;
+  }
+  .cover .credits {
+    font-family: 'Patrick Hand', cursive;
+    font-size: 16px;
+    color: #666;
+    margin-top: 30px;
+  }
+
+  /* Comic pages */
+  .page {
+    width: var(--page-width);
+    background: #f0ece0;
+    border: 4px solid #222;
+    padding: var(--gutter);
+    display: grid;
+    gap: var(--gutter);
+    box-shadow: 8px 8px 20px rgba(0,0,0,0.5);
+  }
+
+  /* Panel */
+  .panel {
+    position: relative;
+    overflow: hidden;
+    border: var(--panel-border);
+    background: #111;
+  }
+  .panel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Speech bubbles */
+  .speech {
+    position: absolute;
+    background: var(--bubble-bg);
+    border: var(--bubble-border);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-family: 'Bangers', cursive;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    line-height: 1.3;
+    max-width: 55%;
+    z-index: 10;
+    text-align: center;
+  }
+  .speech::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+  /* Tail pointing down-left */
+  .speech.tail-bl::after {
+    bottom: -14px; left: 20%;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 14px solid #000;
+  }
+  .speech.tail-bl::before {
+    content: '';
+    position: absolute;
+    bottom: -11px; left: calc(20% + 1px);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 12px solid #fff;
+    z-index: 1;
+  }
+  /* Tail pointing down-right */
+  .speech.tail-br::after {
+    bottom: -14px; right: 20%;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 14px solid #000;
+  }
+  .speech.tail-br::before {
+    content: '';
+    position: absolute;
+    bottom: -11px; right: calc(20% + 1px);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 12px solid #fff;
+    z-index: 1;
+  }
+  /* Tail pointing up-left */
+  .speech.tail-tl::after {
+    top: -14px; left: 20%;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 14px solid #000;
+  }
+  .speech.tail-tl::before {
+    content: '';
+    position: absolute;
+    top: -11px; left: calc(20% + 1px);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 12px solid #fff;
+    z-index: 1;
+  }
+  /* Tail pointing up-right */
+  .speech.tail-tr::after {
+    top: -14px; right: 20%;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 14px solid #000;
+  }
+  .speech.tail-tr::before {
+    content: '';
+    position: absolute;
+    top: -11px; right: calc(20% + 1px);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 12px solid #fff;
+    z-index: 1;
+  }
+
+  /* Narration box */
+  .narration {
+    position: absolute;
+    background: var(--narration-bg);
+    border: var(--narration-border);
+    padding: 6px 12px;
+    font-family: 'Patrick Hand', cursive;
+    font-size: 14px;
+    line-height: 1.3;
+    max-width: 60%;
+    z-index: 10;
+    color: #333;
+  }
+
+  /* Character label in speech */
+  .speech .char {
+    display: none;
+  }
+
+  /* Page-specific layouts */
+
+  /* Page 1: 2 rows - top wide, bottom two columns */
+  .page-1 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 320px 360px;
+  }
+  .page-1 .panel-1 { grid-column: 1 / -1; }
+
+  /* Page 2: big splash + small */
+  .page-2 {
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: 500px;
+  }
+
+  /* Page 3: 2 cols top, wide bottom */
+  .page-3 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 350px 300px;
+  }
+  .page-3 .panel-7 { grid-column: 1 / -1; }
+
+  /* Page 4: two equal panels */
+  .page-4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 500px;
+  }
+
+  /* Page 5: two stacked */
+  .page-5 {
+    grid-template-columns: 1fr 1.4fr;
+    grid-template-rows: 500px;
+  }
+
+  /* Page 6: two columns */
+  .page-6 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 500px;
+  }
+
+  /* Page 7: single splash */
+  .page-7 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 600px;
+  }
+
+  /* Page number */
+  .page-num {
+    text-align: center;
+    font-family: 'Patrick Hand', cursive;
+    color: #666;
+    font-size: 14px;
+    margin-top: -2px;
+    padding: 4px;
+    background: #f0ece0;
+    border: 4px solid #222;
+    border-top: none;
+    width: var(--page-width);
+    box-shadow: 8px 8px 20px rgba(0,0,0,0.5);
+  }
+
+  /* END card */
+  .end-card {
+    width: var(--page-width);
+    background: #0a0a1a;
+    border: 4px solid #333;
+    padding: 60px;
+    text-align: center;
+  }
+  .end-card h2 {
+    font-family: 'Bangers', cursive;
+    font-size: 48px;
+    color: #ffd700;
+    text-shadow: 3px 3px 0 #000;
+  }
+  .end-card p {
+    font-family: 'Patrick Hand', cursive;
+    color: #888;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <h1>BATMAN</h1>
+  <div class="subtitle">A screenplay by Artificial Intelligence</div>
+  <div class="credits">
+    Script generated by AI &bull; Art by Gemini &bull; Layout by humans (probably)
+  </div>
+</div>
+
+<!-- PAGE 1 -->
+<div class="page page-1">
+
+  <!-- Panel 1: Batcave establishing -->
+  <div class="panel panel-1">
+    <img src="img/Gemini_Generated_Image_gtmnotgtmnotgtmn.png" alt="Batman in the Batcave">
+    <div class="narration" style="top:8px; left:8px; max-width:50%;">
+      BATMAN stands next to his batmobile and uses his batcomputer. He's sometimes Bruce Wayne sometimes Batman. Alltimes orphan.
+    </div>
+    <div class="speech tail-bl" style="top:8px; right:8px; max-width:40%;">
+      This is now a safe city. I have punched a penguin into prison.
+    </div>
+  </div>
+
+  <!-- Panel 2: Alfred goth ham -->
+  <div class="panel panel-2">
+    <img src="img/Gemini_Generated_Image_7fzzwc7fzzwc7fzz.png" alt="Alfred with goth ham">
+    <div class="narration" style="top:8px; left:8px; max-width:80%;">
+      ALFRED, Batman's loyal batler, carries a tray of goth ham.
+    </div>
+    <div class="speech tail-bl" style="bottom: 20px; right: 8px; max-width:50%;">
+      Eat a dinner, Mattress Wayne.
+    </div>
+  </div>
+
+  <!-- Panel 3: placeholder for layout - we'll actually use this for Batman's line -->
+  <div class="panel panel-3" style="background:#0d1117; display:flex; align-items:center; justify-content:center;">
+    <div style="font-family:'Bangers',cursive; color:#ffd700; font-size:42px; text-align:center; text-shadow:2px 2px 0 #000; padding:20px; letter-spacing:2px;">
+      INT. TRADITIONAL BATCAVE
+    </div>
+  </div>
+
+</div>
+<div class="page-num">- 1 -</div>
+
+<!-- PAGE 2 -->
+<div class="page page-2">
+
+  <!-- Panel 3: Explosion entrance -->
+  <div class="panel panel-3">
+    <img src="img/Gemini_Generated_Image_z231iez231iez231.png" alt="Joker and Two-Face enter through explosion">
+    <div class="narration" style="bottom:8px; left:8px; max-width:55%;">
+      An explosion explodes. THE JOKER and TWO-FACE enter the cave. Joker is a clown but insane. Two-Face is a man but attorney.
+    </div>
+  </div>
+
+  <!-- Panel 4: Batman "well actually" -->
+  <div class="panel panel-4">
+    <img src="img/Gemini_Generated_Image_d7zu4xd7zu4xd7zu.png" alt="Batman correcting everyone">
+    <div class="speech tail-bl" style="top:8px; left:8px; right:8px; max-width:90%;">
+      No! It is Two-Face and One-Face. They hate me for being a bat.
+    </div>
+  </div>
+
+</div>
+<div class="page-num">- 2 -</div>
+
+<!-- PAGE 3 -->
+<div class="page page-3">
+
+  <!-- Panel 5: Throws Alfred -->
+  <div class="panel panel-5">
+    <img src="img/Gemini_Generated_Image_qtfiekqtfiekqtfi.png" alt="Batman throws Alfred at Two-Face">
+    <div class="narration" style="top:8px; left:8px;">
+      Batman throws Alfred at Two-Face.
+    </div>
+  </div>
+
+  <!-- Panel 6: Coin flip -->
+  <div class="panel panel-6">
+    <img src="img/Gemini_Generated_Image_pdwwv7pdwwv7pdww.png" alt="Two-Face flips Alfred like a coin">
+    <div class="narration" style="top:8px; right:8px; text-align:right; max-width:55%;">
+      Two-Face flips Alfred like a coin. Alfred lands heads up which means Two-Face goes home.
+    </div>
+  </div>
+
+  <!-- Panel 7: Face off wide -->
+  <div class="panel panel-7">
+    <img src="img/Gemini_Generated_Image_3eykcx3eykcx3eyk.png" alt="Batman and Joker face off">
+    <div class="speech tail-bl" style="top:8px; right:8px; max-width:40%;">
+      It is just you and I, the Joker. Bat versus clown. Moral enemies.
+    </div>
+  </div>
+
+</div>
+<div class="page-num">- 3 -</div>
+
+<!-- PAGE 4 -->
+<div class="page page-4">
+
+  <!-- Panel 8: I drink anarchy -->
+  <div class="panel panel-8">
+    <img src="img/Gemini_Generated_Image_8j86ew8j86ew8j86.png" alt="Joker: I drink anarchy">
+    <div class="speech tail-br" style="top:8px; left:8px; max-width:50%;">
+      I am such a freak. Society is bad. You drink water, I drink anarchy.
+    </div>
+  </div>
+
+  <!-- Panel 9: I drink bats -->
+  <div class="panel panel-9">
+    <img src="img/Gemini_Generated_Image_1slov11slov11slo.png" alt="Batman: I drink bats">
+    <div class="speech tail-bl" style="top:8px; right:8px; max-width:55%;">
+      I drink bats just like a bat would!
+    </div>
+  </div>
+
+</div>
+<div class="page-num">- 4 -</div>
+
+<!-- PAGE 5 -->
+<div class="page page-5">
+
+  <!-- Panel 10: Looking for parents -->
+  <div class="panel panel-10">
+    <img src="img/Gemini_Generated_Image_u26we6u26we6u26w.png" alt="Batman looks for his parents">
+    <div class="narration" style="bottom:8px; left:8px; max-width:80%;">
+      Batman looks around for his parents, but they are still dead. This makes him have anger.
+    </div>
+  </div>
+
+  <!-- Panel 11: Batrocket -->
+  <div class="panel panel-11">
+    <img src="img/Gemini_Generated_Image_6ubih06ubih06ubi.png" alt="Batrocket vs clownly power">
+    <div class="narration" style="top:8px; left:8px; max-width:50%;">
+      He fires a batrocket. The Joker deflects it with his sick sense of humor. A clownly power.
+    </div>
+  </div>
+
+</div>
+<div class="page-num">- 5 -</div>
+
+<!-- PAGE 6 -->
+<div class="page page-6">
+
+  <!-- Panel 12: Alfred give birth -->
+  <div class="panel panel-12">
+    <img src="img/Gemini_Generated_Image_y1t6byy1t6byy1t6.png" alt="Alfred give birth to Robin">
+    <div class="speech tail-br" style="top:8px; left:8px; max-width:50%; font-size:13px;">
+      I have never followed a rule. That is my rule. Do you follow? I don't.
+    </div>
+    <div class="narration" style="bottom:8px; left:8px; max-width:80%; font-size:13px;">
+      Alfred begins the process since it is his job.
+    </div>
+  </div>
+
+  <!-- Panel 13: Happy batday -->
+  <div class="panel panel-13">
+    <img src="img/Gemini_Generated_Image_r80scir80scir80s.png" alt="Happy batday Birthman">
+    <div class="narration" style="top:8px; left:8px; max-width:70%;">
+      The Joker now has a present in his hand. He juggles it over to Batman.
+    </div>
+    <div class="speech tail-tl" style="bottom:12px; right:8px; max-width:50%;">
+      Happy batday, Birthman.
+    </div>
+  </div>
+
+</div>
+<div class="page-num">- 6 -</div>
+
+<!-- PAGE 7: FINALE -->
+<div class="page page-7">
+
+  <!-- Panel 14: Expired coupon -->
+  <div class="panel panel-14">
+    <img src="img/Gemini_Generated_Image_90onla90onla90on.png" alt="Expired coupon for new parents">
+    <div class="narration" style="top:12px; left:50%; transform:translateX(-50%); max-width:70%; text-align:center; font-size:16px;">
+      Batman opens the present since he's a good guy. It contains a coupon for new parents, but is expired.
+    </div>
+    <div class="narration" style="bottom:12px; left:50%; transform:translateX(-50%); max-width:40%; text-align:center; font-size:18px; font-weight:bold; background:#333; color:#f5e6a0; border-color:#ffd700;">
+      This is a Joker joke.
+    </div>
+  </div>
+
+</div>
+<div class="page-num">- 7 -</div>
+
+<!-- END CARD -->
+<div class="end-card">
+  <h2>THE END</h2>
+  <p>Batman will return. He has no choice. He is Batman.</p>
+</div>
+
+</body>
+</html>
