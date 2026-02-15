@@ -4,7 +4,7 @@ A comic book adaptation of the infamous AI-generated Batman screenplay that went
 
 You know the one. "Alltimes orphan." "Eat a dinner, Mattress Wayne." "I drink bats just like a bat would!"
 
-**[Read the comic](comic.html)** (download/clone and open locally)
+**[Read the comic](https://hxhippy.github.io/That-Batman-Script-Thing/)** | [or open locally](comic.html)
 
 ## What Is This?
 
@@ -18,9 +18,13 @@ narration boxes.
 
 ## The Original Script
 
-The original AI-generated screenplay is included as `i0GrV4M.jpeg`. It circulated
-widely online and its original author is unknown. If you know who created the
-original prompt or script, please open an issue so we can give proper credit.
+The original AI-generated screenplay that started it all:
+
+![The Original AI-Generated Batman Script](i0GrV4M.jpeg)
+
+It circulated widely online and its original author is unknown. If you know who
+created the original prompt or script, please open an issue so we can give proper
+credit.
 
 ## Credits
 
